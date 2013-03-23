@@ -64,7 +64,7 @@ function formatTx(tx) {
     }
     if (txin.source) {
       data.in[j].sourceAddr = Util.pubKeyHashToAddress(txin.source.getScript().simpleOutPubKeyHash());
-      data.in[j].value = Util.formatValue(txin.source.v);
+      data.in[j].value = valueToBigInt(txin.source.v).toString();
     }
     data.in[j].type = txin.getScript().getInType();
   });
@@ -74,9 +74,9 @@ function formatTx(tx) {
     data.out[j].type = txout.getScript().getOutType();
   });
 
-  data.totalIn = Util.formatValue(tx.totalIn);
-  data.totalOut = Util.formatValue(tx.totalOut);
-  if (tx.fee) data.fee = Util.formatValue(tx.fee);
+  data.totalIn = tx.totalIn.toString();
+  data.totalOut = tx.totalOut.toString();
+  if (tx.fee) data.fee = valueToBigInt(tx.fee).toString();
 
   data.size = tx.serialize().length;
 

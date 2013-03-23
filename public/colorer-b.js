@@ -45,36 +45,6 @@ function getSpent(txHash, callback) {
     }).fail(function (what, thefuck) { alert('fail:' + what + ' ' + thefuck);});
 }
 
-
-// move decimal point 8 places
-function btcToSatoshi(s) {
-    if (typeof s != 'string') return s;
-    // find decimal point
-    var i = s.indexOf('.');
-    if(i !== -1) {
-        // parse string without '.' as an integer
-        var x = +(s.substr(0, i) + s.substr(i+1, i+9));
-
-        // multiply by power of 10 to make into satoshis
-        return x * Math.pow(10, 9 - s.length + i);
-    } else {
-        return +s * 1e8;
-    }
-}
-
-// convert the input and output values from BTC to Satoshis
-// If not, then floating point rounding errors will propagate
-// and cause the matching algorithm to give wrong results
-function fixData(tx) {
-    tx.out.forEach(function(o) {
-        o.value = btcToSatoshi(o.value);
-    });
-
-    tx.in.forEach(function(i) {
-        i.value = btcToSatoshi(i.value);
-    });
-}
-
 function matchInputs(tx) {
     var inputs = [0];
     var outputs = [];
@@ -224,9 +194,6 @@ function getColor(txHash, outputIdx, callback) {
                     }
 
                     else {
-                        // fix the in and out values to be integers rather than decimals
-                        fixData(tx);
-
                         var matching = matchInputs(tx);
 
 
